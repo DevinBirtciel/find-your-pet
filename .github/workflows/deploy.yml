@@ -1,0 +1,32 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::310429590780:role/GitHubActionsRole
+          aws-region: us-east-1
+
+      - name: Deploy to AWS
+        run: |
+          echo "Deploying application... Hello world!"
+          # Add your deployment commands here
+          # For example:
+          # aws s3 cp ./build s3://your-bucket-name --recursive
+          # aws lambda update-function-code --function-name your-function-name --zip-file fileb://function.zip
