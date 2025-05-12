@@ -40,6 +40,13 @@ export class FindYourPetStack extends cdk.Stack {
       },
     });
 
+    const uploadResource = api.root.addResource("upload");
+    const lambdaIntegration = new apigateway.LambdaIntegration(photoUpload, {
+      proxy: true,
+    });
+
+    uploadResource.addMethod("POST", lambdaIntegration);
+
     new route53.ARecord(this, "FindYourPetsApiGatewayAliasRecord", {
       zone: hostedZone,
       target: route53.RecordTarget.fromAlias(
