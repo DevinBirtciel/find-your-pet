@@ -10,7 +10,7 @@ export class FindYourPetStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const photoUpload = new lambda.Function(this, "PhotoUpload", {
+    const photoUpload = new lambda.Function(this, "FindYourPetsPhotoUpload", {
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: "lambda.find-your-pet.handler",
       code: lambda.Code.fromAsset("src"),
@@ -24,7 +24,7 @@ export class FindYourPetStack extends cdk.Stack {
 
     const certificate = new certificatemanager.Certificate(
       this,
-      "ApiGatewayCertificate",
+      "FindYourPetsApiGatewayCertificate",
       {
         domainName: `api.${domainName}`,
         validation:
@@ -40,7 +40,7 @@ export class FindYourPetStack extends cdk.Stack {
       },
     });
 
-    new route53.ARecord(this, "ApiGatewayAliasRecord", {
+    new route53.ARecord(this, "FindYourPetsApiGatewayAliasRecord", {
       zone: hostedZone,
       target: route53.RecordTarget.fromAlias(
         new route53Targets.ApiGateway(api)
