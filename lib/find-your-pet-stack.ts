@@ -41,7 +41,9 @@ export class FindYourPetStack extends cdk.Stack {
     });
 
     const uploadResource = api.root.addResource("upload");
-    const lambdaIntegration = new apigateway.LambdaIntegration(photoUpload);
+    const lambdaIntegration = new apigateway.LambdaIntegration(photoUpload, {
+      proxy: false,
+    });
 
     uploadResource.addMethod("POST", lambdaIntegration);
 
