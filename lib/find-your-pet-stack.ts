@@ -38,6 +38,7 @@ export class FindYourPetStack extends cdk.Stack {
         domainName: `api.${domainName}`,
         certificate,
       },
+      proxy: false,
     });
 
     const uploadResource = api.root.addResource("upload");
