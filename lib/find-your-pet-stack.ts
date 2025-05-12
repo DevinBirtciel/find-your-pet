@@ -12,11 +12,11 @@ export class FindYourPetStack extends cdk.Stack {
 
     const photoUpload = new lambda.Function(this, "PhotoUpload", {
       runtime: lambda.Runtime.NODEJS_18_X,
-      code: lambda.Code.fromAsset("lambda"),
-      handler: "src/lambda/photo-upload.handler",
+      handler: "lambda.find-your-pet.handler",
+      code: lambda.Code.fromAsset("src"),
     });
 
-    const domainName = "api.find-your-pets.com";
+    const domainName = "find-your-pets.com";
 
     const hostedZone = route53.HostedZone.fromLookup(this, "HostedZone", {
       domainName,
@@ -26,16 +26,16 @@ export class FindYourPetStack extends cdk.Stack {
       this,
       "ApiGatewayCertificate",
       {
-        domainName: `${domainName}`, // Subdomain for the API
+        domainName: `api.${domainName}`,
         validation:
           certificatemanager.CertificateValidation.fromDns(hostedZone),
       }
     );
 
-    const api = new apigateway.LambdaRestApi(this, "MyApiGateway", {
+    const api = new apigateway.LambdaRestApi(this, "FindYourPetsApi", {
       handler: photoUpload,
       domainName: {
-        domainName: `${domainName}`, // API Gateway's custom domain
+        domainName: `api.${domainName}`,
         certificate,
       },
     });
@@ -45,7 +45,7 @@ export class FindYourPetStack extends cdk.Stack {
       target: route53.RecordTarget.fromAlias(
         new route53Targets.ApiGateway(api)
       ),
-      recordName: `${domainName}`,
+      recordName: `api.${domainName}`,
     });
   }
 }

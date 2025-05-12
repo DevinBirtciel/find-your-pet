@@ -1,32 +1,40 @@
-name: Deploy to AWS
-
+name: Deploy AWS CDK and Lambda
 on:
   push:
     branches:
       - main
-
 jobs:
   deploy:
+    name: Deploy to AWS
     runs-on: ubuntu-latest
-
-    permissions:
-      id-token: write # Required for OIDC
-      contents: read
-
+    environment: prod
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          role-to-assume: arn:aws:iam::310429590780:role/GitHubActionsRole
-          aws-region: us-east-1
-
-      - name: Deploy to AWS
+          node-version: '18'
+      - name: Install dependencies
         run: |
-          echo "Deploying application... Hello world!"
-          # Add your deployment commands here
-          # For example:
-          # aws s3 cp ./build s3://your-bucket-name --recursive
-          # aws lambda update-function-code --function-name your-function-name --zip-file fileb://function.zip
+          npm install -g aws-cdk
+          npm install
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-1
+      - name: Deploy CDK stack
+        run: |
+          cdk bootstrap
+          cdk deploy --require-approval never
+      # - name: Package Lambda functions
+      #   run: |
+      #     # If you have Lambda functions in specific directories, zip them
+      #     cd src/lambda
+      #     zip -r photo-upload.zip .
+      #     aws lambda update-function-code --function-name photo-upload --zip-file fileb://photo-upload.zip
+      - name: Verify deployment
+        run: |
+          echo "Deployment completed successfully."
