@@ -44,12 +44,12 @@ export class FindYourPetStack extends cdk.Stack {
       proxy: false,
     });
 
-    const uploadResource = api.root.addResource("get-signed-url");
+    const getSignedUrlResource = api.root.addResource("get-signed-url");
     const lambdaIntegration = new apigateway.LambdaIntegration(photoUpload, {
       proxy: false,
     });
 
-    uploadResource.addMethod("GET", lambdaIntegration);
+    getSignedUrlResource.addMethod("GET", lambdaIntegration);
 
     new route53.ARecord(this, "FindYourPetsApiGatewayAliasRecord", {
       zone: hostedZone,

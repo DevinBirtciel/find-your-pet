@@ -6,6 +6,13 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 const logger = new Logger({ serviceName: "photo-upload" });
 const s3 = new S3Client({ region: process.env.region });
 
+const headers = {
+  "Content-Type": "application/json",
+  "Access-Control-Allow-Origin": "https://find-your-pets.com",
+  "Access-Control-Allow-Methods": "GET",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
 export const handler = async (
   event: APIGatewayEvent,
   context: Context
@@ -21,7 +28,7 @@ export const handler = async (
     return {
       statusCode: 400,
       body: JSON.stringify({ error: "Missing key in query string parameters" }),
-      headers: { "Content-Type": "application/json" },
+      headers,
     };
   }
   if (!event.queryStringParameters?.contentType) {
@@ -31,7 +38,7 @@ export const handler = async (
       body: JSON.stringify({
         error: "Missing contentType in query string parameters",
       }),
-      headers: { "Content-Type": "application/json" },
+      headers,
     };
   }
 
@@ -43,7 +50,7 @@ export const handler = async (
       body: JSON.stringify({
         error: "Invalid contentType in query string parameters",
       }),
-      headers: { "Content-Type": "application/json" },
+      headers,
     };
   }
 
@@ -61,12 +68,7 @@ export const handler = async (
   const response = {
     statusCode: 200,
     body: JSON.stringify({ url }),
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "https://find-your-pets.com",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
+    headers,
   };
 
   logger.info("Response", { response });
