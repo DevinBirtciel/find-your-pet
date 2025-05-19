@@ -14,7 +14,7 @@ export class FindYourPetStack extends cdk.Stack {
 
     const photoUpload = new lambda.Function(this, "FindYourPetsPhotoUpload", {
       runtime: lambda.Runtime.NODEJS_18_X,
-      handler: "lambda.find-your-pet.handler",
+      handler: "lambda/photo-upload.handler",
       code: lambda.Code.fromAsset("src"),
       retryAttempts: 0,
     });
