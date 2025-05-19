@@ -18,15 +18,14 @@ jobs:
       - name: Compile TS to JS and Install dependencies
         run: |
           npm install
-          npm install --save-dev @types/aws-lambda @types/node
-          npm install -g typescript
-          npx tsc --project tsconfig.json --outDir dist
+          npx tsc --project tsconfig.json
+          cp -R src dist/src
           cp package.json dist/
           cd dist
-          npm install -g aws-cdk
           npm install --only=prod
-          npm run build
-          ls -lR -I node_modules
+      - name: Debug deployment package
+        run: |
+          ls -R dist
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:

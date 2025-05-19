@@ -14,9 +14,9 @@ export class FindYourPetStack extends cdk.Stack {
 
     const photoUpload = new lambda.Function(this, "FindYourPetsPhotoUpload", {
       runtime: lambda.Runtime.NODEJS_18_X,
-      handler: "photo-upload.handler",
+      handler: "lambda/photo-upload.handler",
       retryAttempts: 0,
-      code: lambda.Code.fromAsset("dist"),
+      code: lambda.Code.fromAsset("src"),
     });
 
     const domainName = "find-your-pets.com";
