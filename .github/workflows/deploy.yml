@@ -17,12 +17,13 @@ jobs:
           node-version: "18"
       - name: Compile TS to JS and Install dependencies
         run: |
-          npm install typescript
+          npm install -g typescript
           npx tsc --project tsconfig.json --outDir dist
           cp package.json dist/
           cd dist
           npm install -g aws-cdk
           npm install --only=prod
+          ls -lR dist
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:

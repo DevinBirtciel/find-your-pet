@@ -1,31 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "lib": [
-      "es2022"
-    ],
-    "declaration": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": false,
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "experimentalDecorators": true,
-    "strictPropertyInitialization": false,
-    "typeRoots": [
-      "./node_modules/@types"
-    ]
+    "target": "ES2021", // Modern JS output for Node 18
+    "module": "CommonJS", // AWS Lambda expects CommonJS modules
+    "outDir": "dist", // Output directory for compiled JS
+    "rootDir": "src", // Your TypeScript source directory
+    "declaration": false, // No .d.ts files needed for Lambda
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Allow default imports from CommonJS
+    "forceConsistentCasingInFileNames": true, // Prevent case-related bugs
+    "skipLibCheck": true, // Faster builds, skip type checking node_modules
+    "resolveJsonModule": true, // Allow importing JSON files
+    "moduleResolution": "node", // Node module resolution
+    "isolatedModules": true // Required for some build tools
   },
-  "exclude": [
-    "node_modules",
-    "cdk.out"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
