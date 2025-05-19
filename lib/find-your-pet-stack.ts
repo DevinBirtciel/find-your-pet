@@ -14,6 +14,7 @@ export class FindYourPetStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: "lambda.find-your-pet.handler",
       code: lambda.Code.fromAsset("src"),
+      retryAttempts: 0,
     });
 
     const domainName = "find-your-pets.com";

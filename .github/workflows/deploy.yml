@@ -14,7 +14,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
       - name: Install dependencies
         run: |
           npm install -g aws-cdk
@@ -25,16 +25,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-1
+      - name: Compile TypeScript to JavaScript
+        run: |
+          npx tsc
       - name: Deploy CDK stack
         run: |
           cdk bootstrap
           cdk deploy --require-approval never
-      # - name: Package Lambda functions
-      #   run: |
-      #     # If you have Lambda functions in specific directories, zip them
-      #     cd src/lambda
-      #     zip -r photo-upload.zip .
-      #     aws lambda update-function-code --function-name photo-upload --zip-file fileb://photo-upload.zip
       - name: Verify deployment
         run: |
           echo "Deployment completed successfully."
