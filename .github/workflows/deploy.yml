@@ -17,6 +17,7 @@ jobs:
           node-version: "18"
       - name: Compile TS to JS and Install dependencies
         run: |
+          npm install typescript
           npx tsc --project tsconfig.json --outDir dist
           cp package.json dist/
           cd dist
