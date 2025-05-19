@@ -17,8 +17,10 @@ jobs:
           node-version: "18"
       - name: Install dependencies
         run: |
+          cp package.json dist/
+          cd dist
           npm install -g aws-cdk
-          npm install
+          npm install --only=prod
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -27,7 +29,7 @@ jobs:
           aws-region: us-west-1
       - name: Compile TypeScript to JavaScript
         run: |
-          npx tsc
+          npx tsc --project tsconfig.json --outDir dist
       - name: Deploy CDK stack
         run: |
           cdk bootstrap
