@@ -15,8 +15,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-      - name: Install dependencies
+      - name: Compile TS to JS and Install dependencies
         run: |
+          npx tsc --project tsconfig.json --outDir dist
           cp package.json dist/
           cd dist
           npm install -g aws-cdk
@@ -27,9 +28,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-1
-      - name: Compile TypeScript to JavaScript
-        run: |
-          npx tsc --project tsconfig.json --outDir dist
       - name: Deploy CDK stack
         run: |
           cdk bootstrap
