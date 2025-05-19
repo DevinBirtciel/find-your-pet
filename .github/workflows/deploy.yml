@@ -17,6 +17,8 @@ jobs:
           node-version: "18"
       - name: Compile TS to JS and Install dependencies
         run: |
+          npm install
+          npm install --save-dev @types/aws-lambda @types/node
           npm install -g typescript
           npx tsc --project tsconfig.json --outDir dist
           cp package.json dist/
