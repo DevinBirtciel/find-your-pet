@@ -61,7 +61,12 @@ export const handler = async (
   const response = {
     statusCode: 200,
     body: JSON.stringify({ url }),
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "https://find-your-pets.com",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
   };
 
   logger.info("Response", { response });
