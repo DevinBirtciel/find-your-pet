@@ -8,7 +8,7 @@ const s3 = new S3Client({ region: process.env.region });
 
 const headers = {
   "Content-Type": "application/json",
-  "Access-Control-Allow-Origin": "https://find-your-pets.com",
+  "Access-Control-Allow-Origin": "https://api.find-your-pets.com",
   "Access-Control-Allow-Methods": "GET",
   "Access-Control-Allow-Headers": "Content-Type",
 };
@@ -42,7 +42,7 @@ export const handler = async (
     };
   }
 
-  const approvedContentTypes = ["image/jpeg", "image/png"];
+  const approvedContentTypes = ["image/jpeg", "image/jpg", "image/png"];
   if (!approvedContentTypes.includes(event.queryStringParameters.contentType)) {
     logger.error("Invalid contentType in query string parameters");
     return {
