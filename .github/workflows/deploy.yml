@@ -26,7 +26,6 @@ jobs:
           npm install -g aws-cdk
           npm install --only=prod
           npm run build
-          ls -lR dist
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
