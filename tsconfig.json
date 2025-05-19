@@ -11,7 +11,8 @@
     "skipLibCheck": true, // Faster builds, skip type checking node_modules
     "resolveJsonModule": true, // Allow importing JSON files
     "moduleResolution": "node", // Node module resolution
-    "isolatedModules": true // Required for some build tools
+    "isolatedModules": true, // Required for some build tools
+    "types": ["node", "aws-lambda"] // Include types for Node.js and AWS Lambda
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
