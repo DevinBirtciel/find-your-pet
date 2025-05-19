@@ -1,7 +1,10 @@
 import { Logger } from "@aws-lambda-powertools/logger";
 import { APIGatewayEvent, Context } from "aws-lambda";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const logger = new Logger({ serviceName: "photo-upload" });
+const s3 = new S3Client({ region: process.env.region });
 
 export const handler = async (
   event: APIGatewayEvent,
@@ -11,15 +14,54 @@ export const handler = async (
     event,
     context,
   });
-
   logger.info("Received event");
+
+  if (!event.queryStringParameters?.key) {
+    logger.error("Missing key in query string parameters");
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "Missing key in query string parameters" }),
+      headers: { "Content-Type": "application/json" },
+    };
+  }
+  if (!event.queryStringParameters?.contentType) {
+    logger.error("Missing contentType in query string parameters");
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        error: "Missing contentType in query string parameters",
+      }),
+      headers: { "Content-Type": "application/json" },
+    };
+  }
+
+  const approvedContentTypes = ["image/jpeg", "image/png"];
+  if (!approvedContentTypes.includes(event.queryStringParameters.contentType)) {
+    logger.error("Invalid contentType in query string parameters");
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        error: "Invalid contentType in query string parameters",
+      }),
+      headers: { "Content-Type": "application/json" },
+    };
+  }
+
+  const bucketName = process.env.BUCKET_NAME ?? "your-bucket-name";
+  const key = event.queryStringParameters?.key ?? "uploads/example.jpg";
+
+  const command = new PutObjectCommand({
+    Bucket: bucketName,
+    Key: key,
+    ContentType: event.queryStringParameters?.contentType ?? "image/jpg",
+  });
+
+  const url = await getSignedUrl(s3, command, { expiresIn: 3600 }); // 1 hour expiry
 
   const response = {
     statusCode: 200,
-    body: JSON.stringify({
-      message: "Hello World from the 'photo-upload' Lambda function!",
-      input: event,
-    }),
+    body: JSON.stringify({ url }),
+    headers: { "Content-Type": "application/json" },
   };
 
   logger.info("Response", { response });

@@ -4,6 +4,8 @@ import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as route53 from "aws-cdk-lib/aws-route53";
 import * as route53Targets from "aws-cdk-lib/aws-route53-targets";
 import * as certificatemanager from "aws-cdk-lib/aws-certificatemanager";
+import * as iam from "aws-cdk-lib/aws-iam";
+import * as s3 from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 
 export class FindYourPetStack extends cdk.Stack {
@@ -56,5 +58,22 @@ export class FindYourPetStack extends cdk.Stack {
       ),
       recordName: `api.${domainName}`,
     });
+
+    // configure s3 bucket for lambda to upload to
+    const bucket = new s3.Bucket(this, "FindYourPetsBucket", {
+      bucketName: "find-your-pets-bucket",
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+      publicReadAccess: false,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+    });
+    bucket.grantReadWrite(photoUpload);
+    photoUpload.addEnvironment("BUCKET_NAME", bucket.bucketName);
+    photoUpload.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["s3:PutObject", "s3:GetObject", "s3:ListBucket"],
+        resources: [bucket.bucketArn],
+      })
+    );
   }
 }
