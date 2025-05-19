@@ -17,6 +17,7 @@ jobs:
           node-version: "18"
       - name: Compile TS to JS and Install dependencies
         run: |
+          npm install -g aws-cdk
           npm install
           npx tsc --project tsconfig.json
           cp -R src dist/src
