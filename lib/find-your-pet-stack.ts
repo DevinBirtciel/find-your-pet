@@ -17,6 +17,7 @@ export class FindYourPetStack extends cdk.Stack {
       handler: "lambda/photo-upload.handler",
       retryAttempts: 0,
       code: lambda.Code.fromAsset("dist"),
+      logRetention: cdk.aws_logs.RetentionDays.ONE_WEEK,
     });
 
     const domainName = "find-your-pets.com";
@@ -42,6 +43,19 @@ export class FindYourPetStack extends cdk.Stack {
         certificate,
       },
       proxy: true,
+      deployOptions: {
+        stageName: "prod",
+        loggingLevel: apigateway.MethodLoggingLevel.INFO,
+      },
+      defaultCorsPreflightOptions: {
+        allowOrigins: apigateway.Cors.ALL_ORIGINS,
+        allowMethods: apigateway.Cors.ALL_METHODS,
+        allowHeaders: apigateway.Cors.DEFAULT_HEADERS,
+        statusCode: 200,
+      },
+      deploy: true,
+      restApiName: "FindYourPetsApi",
+      description: "API for Find Your Pets",
     });
 
     const getSignedUrlResource = api.root.addResource("get-signed-url");
