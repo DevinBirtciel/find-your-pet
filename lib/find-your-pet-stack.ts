@@ -41,12 +41,12 @@ export class FindYourPetStack extends cdk.Stack {
         domainName: `api.${domainName}`,
         certificate,
       },
-      proxy: false,
+      proxy: true,
     });
 
     const getSignedUrlResource = api.root.addResource("get-signed-url");
     const lambdaIntegration = new apigateway.LambdaIntegration(photoUpload, {
-      proxy: false,
+      proxy: true,
     });
 
     getSignedUrlResource.addMethod("GET", lambdaIntegration);
