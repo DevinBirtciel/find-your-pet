@@ -58,12 +58,12 @@ export class FindYourPetStack extends cdk.Stack {
       description: "API for Find Your Pets",
     });
 
-    const getSignedUrlResource = api.root.addResource("get-signed-url");
-    const lambdaIntegration = new apigateway.LambdaIntegration(photoUpload, {
-      proxy: true,
-    });
+    // const getSignedUrlResource = api.root.addResource("get-signed-url");
+    // const lambdaIntegration = new apigateway.LambdaIntegration(photoUpload, {
+    //   proxy: true,
+    // });
 
-    getSignedUrlResource.addMethod("GET", lambdaIntegration);
+    // getSignedUrlResource.addMethod("GET", lambdaIntegration);
 
     new route53.ARecord(this, "FindYourPetsApiGatewayAliasRecord", {
       zone: hostedZone,
