@@ -46,6 +46,8 @@ export class FindYourPetStack extends cdk.Stack {
       deployOptions: {
         stageName: "prod",
         loggingLevel: apigateway.MethodLoggingLevel.INFO,
+        dataTraceEnabled: true,
+        metricsEnabled: true,
       },
       defaultCorsPreflightOptions: {
         allowOrigins: apigateway.Cors.ALL_ORIGINS,
